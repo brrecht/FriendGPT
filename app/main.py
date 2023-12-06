@@ -20,7 +20,7 @@ CHATGPT_MODEL = os.environ.get("CHATGPT_MODEL")
 
 def text_to_speech(input_text: str, file_path: str) -> None:
     """Converts text to speech and saves it as an audio file."""
-    response = client.audio.speech.create(
+    response = openai.audio.speech.create(
         model="tts-1",
         voice="nova",
         input=input_text
