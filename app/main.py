@@ -6,7 +6,7 @@ import time
 import telegram
 from dotenv import load_dotenv
 from pathlib import Path
-import openai
+import openai import OpenAI
 import sys
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -18,12 +18,28 @@ OPENAI_TOKEN = os.environ.get("OPENAI_TOKEN")
 openai.api_key = OPENAI_TOKEN
 CHATGPT_MODEL = os.environ.get("CHATGPT_MODEL")
 
+client = OpenAI()
 
+def text_to_speech(input_text: str, file_path: str) -> None:
+    """Converts text to speech and saves it as an audio file."""
+    response = client.audio.speech.create(
+        model="tts-1",
+        voice="nova",
+        input=input_text
+    )
+    response.stream_to_file(file_path)
+
+def handle_text_to_speech_command(update, context):
+    """Handle command for text to speech."""
+    input_text = "Today is a wonderful day to build something people love!"
+    speech_file_path = Path(__file__).parent / "speech.mp3"
+    text_to_speech(input_text, speech_file_path)
 
 def help_command_handler(update, context):
     """Send a message when the command /help is issued."""
     update.message.reply_text("Type /start to register to the service")
 
+dp.add_handler(CommandHandler("text_to_speech", handle_text_to_speech_command))
 
 def start_command_handler(update, context):
     """Send a message when the command /start is issued."""
