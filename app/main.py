@@ -39,7 +39,29 @@ def help_command_handler(update, context):
     """Send a message when the command /help is issued."""
     update.message.reply_text("Type /start to register to the service")
 
+def handle_text_to_speech_command(update, context):
+    """Handle command for text to speech."""
+    # Check if the user sent some text along with the command
+    if not context.args:
+        update.message.reply_text("Please provide some text after the command. For example, /text_to_speech Hello World")
+        return
+
+    # Joining the arguments to form the input text
+    input_text = ' '.join(context.args)
+    
+    # Define the path for the speech file
+    speech_file_path = Path(__file__).parent / "speech.mp3"
+
+    # Convert the text to speech and save as an audio file
+    text_to_speech(input_text, speech_file_path)
+    
+    # Send the speech file back to the user
+    with open(speech_file_path, 'rb') as audio_file:
+        context.bot.send_audio(chat_id=update.message.chat.id, audio=audio_file)
+
+# In your main function or setup, add the handler for the command
 dp.add_handler(CommandHandler("text_to_speech", handle_text_to_speech_command))
+
 
 def start_command_handler(update, context):
     """Send a message when the command /start is issued."""
