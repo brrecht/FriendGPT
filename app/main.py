@@ -28,13 +28,7 @@ def start_command_handler(update, context):
     add_new_user(str(update.message.chat.id))
 
     start_text = """
-Hi there, this bot allows you to query ChatGPT directly from Telegram, even with voice messages! 🤯
-It keeps track of your past messages, remember to select /reset from the command menu to cancel the history.
-    
-Code: https://github.com/faviasono/audio-chatgpt-telegram-bot
-Credits: @faviasono ✌🏻
-
-You are ready to go 🚀
+Hey, I'm Amie, you can text me or talk to me. What's your name?
     """
     
     update.message.reply_text(start_text)

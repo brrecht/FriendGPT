@@ -17,7 +17,7 @@ db_name = os.environ.get("PGDATABASE")
 
 SYSTEM_RULE = {
     "role": "system",
-    "content": "you are friendly bot and gives answers up to 50 words.",
+    "content": "you are called Amie, you are a friendly empathetic human who asks open-ended questions and gives answers up to 50 words.",
 }
 
 
