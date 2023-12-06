@@ -17,7 +17,6 @@ OPENAI_TOKEN = os.environ.get("OPENAI_TOKEN")
 openai.api_key = OPENAI_TOKEN
 CHATGPT_MODEL = os.environ.get("CHATGPT_MODEL")
 
-client = OpenAI()
 
 def text_to_speech(input_text: str, file_path: str) -> None:
     """Converts text to speech and saves it as an audio file."""
