@@ -6,14 +6,14 @@ import time
 import telegram
 from dotenv import load_dotenv
 from pathlib import Path
-import openai import OpenAI
+import openai
+from openai import OpenAI
 import sys
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from database.database import *
 
 load_dotenv("app/.env")
-
 OPENAI_TOKEN = os.environ.get("OPENAI_TOKEN")
 openai.api_key = OPENAI_TOKEN
 CHATGPT_MODEL = os.environ.get("CHATGPT_MODEL")
@@ -29,11 +29,6 @@ def text_to_speech(input_text: str, file_path: str) -> None:
     )
     response.stream_to_file(file_path)
 
-def handle_text_to_speech_command(update, context):
-    """Handle command for text to speech."""
-    input_text = "Today is a wonderful day to build something people love!"
-    speech_file_path = Path(__file__).parent / "speech.mp3"
-    text_to_speech(input_text, speech_file_path)
 
 def help_command_handler(update, context):
     """Send a message when the command /help is issued."""
@@ -59,8 +54,7 @@ def handle_text_to_speech_command(update, context):
     with open(speech_file_path, 'rb') as audio_file:
         context.bot.send_audio(chat_id=update.message.chat.id, audio=audio_file)
 
-# In your main function or setup, add the handler for the command
-dp.add_handler(CommandHandler("text_to_speech", handle_text_to_speech_command))
+
 
 
 def start_command_handler(update, context):
@@ -148,6 +142,7 @@ def main():
     dp.add_handler(CommandHandler("help", help_command_handler))
     dp.add_handler(CommandHandler("start", start_command_handler))
     dp.add_handler(CommandHandler("reset", reset))
+    dp.add_handler(CommandHandler("text_to_speech", handle_text_to_speech_command))
 
     # message handler
     dp.add_handler(MessageHandler(Filters.text, echo))
