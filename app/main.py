@@ -20,34 +20,6 @@ CHATGPT_MODEL = os.environ.get("CHATGPT_MODEL")
 
 
 
-
-def generate_speech(text: str) -> str:
-    """
-    Generate speech from text using OpenAI's TTS API.
-    """
-    speech_file_path = Path("/tmp/speech.mp3")  # Temporary file path for the speech file
-    response = openai.Audio.speech.create(
-        model="tts-1",
-        voice="alloy",
-        input=text
-    )
-    response.stream_to_file(speech_file_path)
-    return str(speech_file_path)
-
-def handle_text_message(update, context):
-    """
-    Handle text message and respond with a voice message.
-    """
-    # ... [your logic to handle text messages]
-
-    text_to_speak = "Your response text here"
-    speech_file_path = generate_speech(text_to_speak)
-
-    # Send the voice message
-    with open(speech_file_path, 'rb') as speech_file:
-        context.bot.send_voice(chat_id=update.message.chat_id, voice=speech_file)
-
-
 def help_command_handler(update, context):
     """Send a message when the command /help is issued."""
     update.message.reply_text("Type /start to register to the service")
