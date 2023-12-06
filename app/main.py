@@ -7,7 +7,6 @@ import telegram
 from dotenv import load_dotenv
 from pathlib import Path
 import openai
-from openai import OpenAI
 import sys
 from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
