@@ -80,7 +80,7 @@ def transcribe_voice_message(voice_message: str) -> str:
     # Use the Whisper AI API to transcribe the voice message
     audio_file= open(voice_message, "rb")
 
-    result = openai.audio.transcriptions(
+    result = openai.audio.transcriptions.create(
         model="whisper-1", 
         file=audio_file
     )
