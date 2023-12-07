@@ -20,7 +20,7 @@ CHATGPT_MODEL = os.environ.get("CHATGPT_MODEL")
 
 def text_to_speech(input_text: str, file_path: str) -> None:
     """Converts text to speech and saves it as an audio file."""
-    response = openai.Audio.Speech.create(
+    response = openai.audio.speech.create(
         model="tts-1",
         voice="nova",
         input=input_text
@@ -79,7 +79,11 @@ def transcribe_voice_message(voice_message: str) -> str:
     """Transcribe voice message using Wishper model."""
     # Use the Whisper AI API to transcribe the voice message
     audio_file= open(voice_message, "rb")
-    result = openai.Audio.transcribe("whisper-1", audio_file)
+
+    result = openai.audio.transcriptions(
+        model="whisper-1", 
+        file=audio_file
+    )
 
     return result["text"]
 
@@ -87,19 +91,20 @@ def transcribe_voice_message(voice_message: str) -> str:
 def handle_voice_message(update, context):
     """ Handle telegram voice message. """
     # Get the voice message from the update
-    voice_message = context.bot.get_file(update.message.voice.file_id)
-    print(voice_message)
-    voice_message.download("/tmp/audio.oga")
-    subprocess.run(["ffmpeg", "-y", "-i", '/tmp/audio.oga', '/tmp/audio.mp3'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    # voice_message = context.bot.get_file(update.message.voice.file_id)
+    # print(voice_message)
+    # voice_message.download("/tmp/audio.oga")
+    # subprocess.run(["ffmpeg", "-y", "-i", '/tmp/audio.oga', '/tmp/audio.mp3'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    # Transcribe the voice message
-    text = transcribe_voice_message("/tmp/audio.mp3")
+    # # Transcribe the voice message
+    # text = transcribe_voice_message("/tmp/audio.mp3")
 
-    # Answer
-    telegram_id = str(update.message.chat.id)
-    answer = generate_response(text, telegram_id)
-    # Send the transcribed text back to the user
+    # # Answer
+    # telegram_id = str(update.message.chat.id)
+    # answer = generate_response(text, telegram_id)
+    # # Send the transcribed text back to the user
 
+    answer = "Ja, ich kann antworten!"
 
     speech_file_path = Path(__file__).parent / "speech.mp3"
     text_to_speech(answer, speech_file_path)
@@ -115,7 +120,13 @@ def generate_response(question: str, telegram_id: str) -> str:
     row = retrieve_history(telegram_id)
     prompt = create_question_prompt(row, question)
 
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=prompt)
+    # response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=prompt)
+    
+    response = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=prompt
+    )
+    
     answer = response["choices"][0]["message"]["content"]
 
     logging.info("Question: %s", question)
