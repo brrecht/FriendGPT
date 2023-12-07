@@ -71,7 +71,7 @@ def echo(update, context):
     telegram_id = str(update.message.chat.id)
     message = update.message.text
     answer = generate_response(message, telegram_id)
-    print("Test")
+    logging.info("Test")
     update.message.reply_text(answer)
 
 
@@ -99,7 +99,7 @@ def handle_voice_message(update, context):
     telegram_id = str(update.message.chat.id)
     answer = generate_response(text, telegram_id)
     # Send the transcribed text back to the user
-    print("Test2")
+    logging.info("Test2")
     update.message.reply_text(answer)
 
 
