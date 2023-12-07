@@ -85,26 +85,26 @@ def transcribe_voice_message(voice_message: str) -> str:
         file=audio_file
     )
 
-    return result["text"]
+    return result.text
 
 
 def handle_voice_message(update, context):
     """ Handle telegram voice message. """
     # Get the voice message from the update
-    # voice_message = context.bot.get_file(update.message.voice.file_id)
+    voice_message = context.bot.get_file(update.message.voice.file_id)
     # print(voice_message)
-    # voice_message.download("/tmp/audio.oga")
-    # subprocess.run(["ffmpeg", "-y", "-i", '/tmp/audio.oga', '/tmp/audio.mp3'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    voice_message.download("/tmp/audio.oga")
+    subprocess.run(["ffmpeg", "-y", "-i", '/tmp/audio.oga', '/tmp/audio.mp3'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    # # Transcribe the voice message
-    # text = transcribe_voice_message("/tmp/audio.mp3")
+    # Transcribe the voice message
+    text = transcribe_voice_message("/tmp/audio.mp3")
 
-    # # Answer
-    # telegram_id = str(update.message.chat.id)
-    # answer = generate_response(text, telegram_id)
-    # # Send the transcribed text back to the user
+    # Answer
+    telegram_id = str(update.message.chat.id)
+    answer = generate_response(text, telegram_id)
+    # Send the transcribed text back to the user
 
-    answer = "Ja, ich kann antworten!"
+    # answer = "Ja, ich kann antworten!"
 
     speech_file_path = Path(__file__).parent / "speech.mp3"
     text_to_speech(answer, speech_file_path)
@@ -126,8 +126,8 @@ def generate_response(question: str, telegram_id: str) -> str:
         model="gpt-3.5-turbo",
         messages=prompt
     )
-    
-    answer = response["choices"][0]["message"]["content"]
+
+    answer = response.choices[0].message.content
 
     logging.info("Question: %s", question)
     logging.info("Got answer: %s", answer)
