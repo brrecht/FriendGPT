@@ -106,7 +106,7 @@ def handle_voice_message(update, context):
 
     # Send the response as a voice message back to the user
     with open(speech_file_path, 'rb') as speech_file:
-        update.message.reply_voice(Voice(speech_file, duration=None))
+        update.message.reply_voice(speech_file)
 
 
 def generate_response(question: str, telegram_id: str) -> str:
