@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 import openai
 import sys
-from telegram.ext import CommandHandler, Filters, MessageHandler, Updater
+from telegram.ext import CommandHandler, Filters, MessageHandler, Updater, Voice
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from database.database import *
 
@@ -99,8 +99,14 @@ def handle_voice_message(update, context):
     telegram_id = str(update.message.chat.id)
     answer = generate_response(text, telegram_id)
     # Send the transcribed text back to the user
-    logging.info("Test2")
-    update.message.reply_text(answer)
+
+
+    speech_file_path = Path(__file__).parent / "speech.mp3"
+    text_to_speech(answer, speech_file_path)
+
+    # Send the response as a voice message back to the user
+    with open(speech_file_path, 'rb') as speech_file:
+        update.message.reply_voice(Voice(speech_file, duration=None))
 
 
 def generate_response(question: str, telegram_id: str) -> str:
